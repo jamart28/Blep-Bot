@@ -1,5 +1,4 @@
 import discord
-from datetime import datetime
 from Blepcord.Commands import *
 from Blepcord.Commands import Help
 from Blepcord import *
@@ -31,6 +30,7 @@ async def on_guild_join(guild):
 #event defintion for messages
 @client.event
 async def on_message(msg):
+    global output
     #finishes commands on messages sent by bot
     if msg.author == client.user:
         #reacts with any emojis in output[3]
@@ -38,7 +38,7 @@ async def on_message(msg):
             msg.add_reaction(reaction)
         #finishes blep/ping command
         if msg.content.startswith(":P"):
-            await cmd.blep.ping(msg, datetime.now())
+            await msg.edit(content=":P ")
     else:
         #grabs guilds prefix and checks that message starts with it
         prefix = sql.read(str(msg.guild.id), "command")
@@ -47,12 +47,17 @@ async def on_message(msg):
             command = tools.parse_command(msg.content, prefix)
             if command in cmd.commands:
                 #runs command from commands dictionary in cmd.py
-                global output = cmd.commands[command].run(msg, tools.parse_args(msg.content))
+                output = cmd.commands[command].run(msg, tools.parse_args(msg.content))
                 #sends output properly split between whether it has an embed or not
                 if output[2] is None:
-                    output[0].send(output[1])
+                    await output[0].send(output[1])
                 else:
-                    output[0].send(output[1], embed=discord.Embed(description=output[2], color=bot.color))
+                    await output[0].send(output[1], embed=discord.Embed(description=output[2], color=bot.color))
+
+@client.event
+async def on_message_edit(msg, edited_msg):
+    if msg.author == client.user:
+        await cmd.blep.ping(edited_msg)
 
 
 #sets up sql server (set sql_setup to false if this is not needed/wanted)
