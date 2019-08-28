@@ -1,147 +1,104 @@
 import sqlite3
 
-#sets up table for discord bot on database given
-#parameters: db=string
-def setup(db):
-    #assigns global variable with database to be used by other commands
-    global database
-    database = db
-    #connecting to database
-    connection = sqlite3.connect(database)
+class sql:
+    """
+    INSTANCE VARIABLES:
+    db: database connected to
+    conn: connection to sql database
+    crsr: cursor for sql commands
+    """
 
-    #creates cursor to read commands
-    crsr = connection.cursor()
+    #constructs sql object to handle data for discord bot
+    def __init__(self, database):
+        self.db = database
+        self.conn = sqlite3.connect(self.db)
+        self.crsr = slef.conn.cursor()
 
-    #sql command to create table
-    command = """CREATE TABLE "servers" (
-    "guild_id" INTEGER,
-    "guild_owner" INTEGER,
-    "command" TEXT,
-    "admin_role" TEXT,
-    PRIMARY KEY("guild_id")
-    );"""
+    #sets up table for server information to be saved
+    def setup(self):
+        #sql command to create table
+        command = """CREATE TABLE "servers" (
+        "guild_id" INTEGER,
+        "guild_owner" INTEGER,
+        "command" TEXT,
+        "admin_role" TEXT,
+        PRIMARY KEY("guild_id")
+        );"""
 
-    #executes command to create table
-    crsr.execute(command)
+        #executes command to create table
+        self.crsr.execute(command)
 
-    #commits changes to db
-    connection.commit()
+        #commits changes to db
+        self.conn.commit()
 
-    #closes connection to db
-    connection.close()
+    #adds server info to table servers
+    def add(server, server_owner):
+        #sql command to add values to table
+        command = """INSERT INTO servers
+        VALUES (?, ?, ':P', 'None');"""
 
-#adds server info to servers table
-#parameters: server=string, server_owner=string, prefix=string
-def add(server, server_owner):
-    database = "blep.db"
-    #connecting to database
-    connection = sqlite3.connect(database)
+        #executes command to add values to table
+        self.crsr.execute(command, (server, server_owner))
 
-    #creates cursor to read commands
-    cursor = connection.cursor()
+        #commits changes to db
+        self.conn.commit()
 
-    #sql command to add values to table
-    command = """INSERT INTO servers
-    VALUES ("""+server+", "+server_owner+", ':P', 'None');"
+    #changes values in table servers
+    def change(server, server_owner=None, prefix=None, admin=None):
+        #if statements control what is changed based on whether they have values
+        if server_owner is not None:
+            #sql command to change guild_owner value in table
+            command = """UPDATE servers
+            SET guild_owner=?
+            WHERE guild_id=?;"""
+            #executes command to change guild_owner value in table
+            self.crsr.execute(command, (server_owner, server))
 
-    #executes command to add values to table
-    cursor.execute(command)
+        if prefix is not None:
+            #sql command to change command value in table
+            command = """UPDATE servers
+            SET command='?'
+            WHERE guild_id=?;"""
+            #executes command to change command value in table
+            self.crsr.execute(command, (prefix, server))
 
-    #commits changes to db
-    connection.commit()
+        if admin is not None:
+            #sql command to change guild_owner value in table
+            command = """UPDATE servers
+            SET admin_role='?'
+            WHERE guild_id=?;"""
+            #executes command to change guild_owner value in table
+            self.crsr.execute(command, (admin, server))
 
-    #closes connection to db
-    connection.close()
+        #commits changes to db
+        self.conn.commit()
 
-#changes values in table servers
-#parameters: server=string, server_owner=string, prefix=string
-def change(server, server_owner=None, prefix=None, admin=None):
-    database = "blep.db"
-    #connecting to database
-    connection = sqlite3.connect(database)
+    #deletes values from table servers
+    def delete(server):
+        #sql command to delete entry in table servers
+        command = """DELETE FROM servers
+        WHERE guild_id=?;"""
 
-    #creates cursor to read commands
-    cursor = connection.cursor()
+        #executes command to delete entry in table servers
+        self.crsr.execute(command, (server))
 
-    #if statements control what is changed based on whether they have values
-    if server_owner is not None:
-        #sql command to change guild_owner value in table
-        command = """UPDATE servers
-        SET guild_owner="""+server_owner+"""
-        WHERE guild_id="""+server+";"
-        #executes command to change guild_owner value in table
-        cursor.execute(command)
+        #commits changes to db
+        self.conn.commit()
 
-    if prefix is not None:
-        #sql command to change command value in table
-        command = """UPDATE servers
-        SET command='"""+prefix+"""'
-        WHERE guild_id="""+server+";"
-        #executes command to change command value in table
-        cursor.execute(command)
+    #reads from sql server based on server and column given
+    def read(server, column):
+        #sql command to read column for server in table servers
+        command = """SELECT ? FROM servers
+        WHERE guild_id=?;"""
 
-    if admin is not None:
-        #sql command to change guild_owner value in table
-        command = """UPDATE servers
-        SET admin_role='"""+admin+"""'
-        WHERE guild_id="""+server+";"
-        #executes command to change guild_owner value in table
-        cursor.execute(command)
+        #executes command to read column for server in table servers
+        self.crsr.execute(command, (column, server))
 
-    #commits changes to db
-    connection.commit()
+        #grabbing data from sql command
+        data = self.crsr.fetchall()
 
-    #closes connection to db
-    connection.close()
+        #commits changes to db
+        self.conn.commit()
 
-#deletes values from table servers
-#parameters: server=string
-def delete(server):
-    database = "blep.db"
-    #connecting to database
-    connection = sqlite3.connect(database)
-
-    #creates cursor to read commands
-    cursor = connection.cursor()
-
-    #sql command to delete entry in table servers
-    command = """DELETE FROM servers
-    WHERE guild_id="""+server+";"
-
-    #executes command to delete entry in table servers
-    cursor.execute(command)
-
-    #commits changes to db
-    connection.commit()
-
-    #closes connection to db
-    connection.close()
-
-#reads from sql server based on server and column given
-#parameters: server=string, column=string
-def read(server, column):
-    database = "blep.db"
-    #connecting to database
-    connection = sqlite3.connect(database)
-
-    #creates cursor to read commands
-    cursor = connection.cursor()
-
-    #sql command to read column for server in table servers
-    command = "SELECT "+column+""" FROM servers
-    WHERE guild_id="""+server+";"
-
-    #executes command to read column for server in table servers
-    cursor.execute(command)
-
-    #grabbing data from sql command
-    data = cursor.fetchall()
-
-    #commits changes to db
-    connection.commit()
-
-    #closes connection to db
-    connection.close()
-
-    #returning data
-    return data[0][0]
+        #returning data
+        return data[0][0]
