@@ -8,7 +8,7 @@ from Blepcord import *
 #creating discord client object
 client = discord.Client()
 #boolean for whether to setup sql server or not
-sql_setup = False
+SQLbot = sql.sql("blep.db")
 
 # TODO: add comments
 @client.event
@@ -24,7 +24,7 @@ async def on_ready():
 # TODO: add comments
 @client.event
 async def on_guild_join(guild):
-    sql.add(str(guild.id), str(guild.owner_id))
+    SQLbot.add(str(guild.id), str(guild.owner_id))
     await client.get_user(guild.owner_id).send(bot.welcomeMessage)
 
 #event defintion for messages
@@ -41,7 +41,7 @@ async def on_message(msg):
             await msg.edit(content=":P ")
     else:
         #grabs guilds prefix and checks that message starts with it
-        prefix = sql.read(str(msg.guild.id), "command")
+        prefix = SQLbot.read(str(msg.guild.id), "command")
         if msg.content.startswith(prefix):
             #grabs command from msg and checks if it is valid
             command = tools.parse_command(msg.content, prefix)
@@ -61,8 +61,8 @@ async def on_message_edit(msg, edited_msg):
 
 
 #sets up sql server (set sql_setup to false if this is not needed/wanted)
-if sql_setup:
-    sql.setup("blep.db")
+if False:
+    SQLbot.setup()
     print("sql database setup")
 
 #assigns token from read file
