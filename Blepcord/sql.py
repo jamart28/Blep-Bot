@@ -14,25 +14,30 @@ class sql:
         self.conn = sqlite3.connect(self.db)
         self.crsr = slef.conn.cursor()
 
+        print("Connected to SQL database")
+
     #sets up table for server information to be saved
-    def setup(self):
-        #sql command to create table
-        command = """CREATE TABLE "servers" (
-        "guild_id" INTEGER,
-        "guild_owner" INTEGER,
-        "command" TEXT,
-        "admin_role" TEXT,
-        PRIMARY KEY("guild_id")
-        );"""
+    def setup(self, needed):
+        if needed:
+            #sql command to create table
+            command = """CREATE TABLE "servers" (
+            "guild_id" INTEGER,
+            "guild_owner" INTEGER,
+            "command" TEXT,
+            "admin_role" TEXT,
+            PRIMARY KEY("guild_id")
+            );"""
 
-        #executes command to create table
-        self.crsr.execute(command)
+            #executes command to create table
+            self.crsr.execute(command)
 
-        #commits changes to db
-        self.conn.commit()
+            #commits changes to db
+            self.conn.commit()
+
+            print("SQL table setup")
 
     #adds server info to table servers
-    def add(server, server_owner):
+    def add(self, server, server_owner):
         #sql command to add values to table
         command = """INSERT INTO servers
         VALUES (?, ?, ':P', 'None');"""
@@ -43,8 +48,10 @@ class sql:
         #commits changes to db
         self.conn.commit()
 
+        print("Added server {} to database".format(server))
+
     #changes values in table servers
-    def change(server, server_owner=None, prefix=None, admin=None):
+    def change(self, server, server_owner=None, prefix=None, admin=None):
         #if statements control what is changed based on whether they have values
         if server_owner is not None:
             #sql command to change guild_owner value in table
@@ -73,8 +80,10 @@ class sql:
         #commits changes to db
         self.conn.commit()
 
+        print("Field changed")
+
     #deletes values from table servers
-    def delete(server):
+    def delete(self, server):
         #sql command to delete entry in table servers
         command = """DELETE FROM servers
         WHERE guild_id=?;"""
@@ -85,8 +94,10 @@ class sql:
         #commits changes to db
         self.conn.commit()
 
+        print("Deleted server {} from database".format(server))
+
     #reads from sql server based on server and column given
-    def read(server, column):
+    def read(self, server, column):
         #sql command to read column for server in table servers
         command = """SELECT ? FROM servers
         WHERE guild_id=?;"""

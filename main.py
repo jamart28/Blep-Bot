@@ -61,9 +61,7 @@ async def on_message_edit(msg, edited_msg):
 
 
 #sets up sql server (set sql_setup to false if this is not needed/wanted)
-if False:
-    SQLbot.setup()
-    print("sql database setup")
+SQLbot.setup(False)
 
 #assigns token from read file
 token = tools.read_file("BOT_TOKEN.txt")
