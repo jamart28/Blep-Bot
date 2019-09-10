@@ -20,7 +20,7 @@ class sql:
     def __init__(self, database):
         self.db = database
         self.conn = sqlite3.connect(self.db)
-        self.crsr = slef.conn.cursor()
+        self.crsr = self.conn.cursor()
 
         print("Connected to SQL database")
 
