@@ -119,5 +119,8 @@ class sql:
         #commits changes to db
         self.conn.commit()
 
+        print("read a thing. Specifically: ")
+        print(data[0][0])
+
         #returning data
         return data[0][0]
