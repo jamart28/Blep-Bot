@@ -121,6 +121,7 @@ class sql:
 
         print("read a thing. Specifically: ")
         print(data[0][0])
+        print(data)
 
         #returning data
         return data[0][0]
