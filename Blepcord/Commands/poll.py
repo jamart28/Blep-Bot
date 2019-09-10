@@ -1,4 +1,4 @@
-from . import emote
+from .. import emote
 
 #command information
 name = "Poll"

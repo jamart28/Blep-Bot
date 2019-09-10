@@ -1,5 +1,13 @@
 import sqlite3
 
+#parameters: server=string, server_owner=string, prefix=string
+#parameters: server=string, server_owner=string, prefix=string
+#parameters: server=string
+#parameters: server=string, column=string
+#^Notes to consider adding later to specific methods
+
+
+
 class sql:
     """
     INSTANCE VARIABLES:
