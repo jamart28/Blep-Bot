@@ -5,6 +5,7 @@ import emojis
 #returns: list of two lists with split arguments
 def split_emotes(args):
     #lists to old emotes and new arguments
+    default_emotes = iter('🇦 🇧 🇨 🇩 🇪 🇫 🇬 🇭 🇮 🇯 🇰 🇱 🇲 🇳 🇴 🇵 🇶 🇷 🇸 🇹 🇺 🇻 🇼 🇽 🇾 🇿'.split())
     emotes = []
     new_args = []
     #splitting arguments
@@ -17,4 +18,4 @@ def split_emotes(args):
         else:
             emotes.append(None)
             new_args.append(arg)
-    return [new_args, emotes]
+    return [new_args, emotes, default_emotes]

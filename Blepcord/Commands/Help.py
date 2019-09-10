@@ -5,8 +5,8 @@ from ..cmd import commands, adminCMD
 #command information
 name = "Help"
 description = "Sends this message to the user"
-parameters = "us: (optional) sends message to channel instead of user"
-usage = '`:Phelp`, `:Phelp "us"`'
+parameters = '"us": (optional) sends message to channel instead of user'
+usage = '`:help`, `:help "us"`'
 
 """
 ouput:

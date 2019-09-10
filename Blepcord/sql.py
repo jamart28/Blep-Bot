@@ -40,7 +40,7 @@ class sql:
     def add(self, server, server_owner):
         #sql command to add values to table
         command = """INSERT INTO servers
-        VALUES (?, ?, ':P', 'None');"""
+        VALUES (?, ?, ':', 'None');"""
 
         #executes command to add values to table
         self.crsr.execute(command, (server, server_owner))

@@ -4,7 +4,8 @@ from .Commands import Help
 
 #dictionary to run commands from messages
 commands = {
-"help" : Help
+"help" : Help,
+"poll" : poll
 }
 
 adminCMD = {
