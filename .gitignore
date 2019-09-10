@@ -1,4 +1,4 @@
 blep.db
 BOT_TOKEN.txt
 CREATOR_ID.txt
-*.pyc
+__pycache__
