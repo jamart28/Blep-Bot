@@ -24,7 +24,7 @@ async def on_ready():
 # TODO: add comments
 @client.event
 async def on_guild_join(guild):
-    SQLbot.add(str(guild.id), str(guild.owner_id))
+    SQLbot.add(str(guild.id))
     await client.get_user(guild.owner_id).send(bot.welcomeMessage)
 
 #event defintion for messages
@@ -35,7 +35,7 @@ async def on_message(msg):
     if msg.author == client.user:
         #reacts with any emojis in output[3]
         for reaction in output[3]:
-            msg.add_reaction(reaction)
+            await msg.add_reaction(reaction)
         #finishes blep/ping command
         if msg.content.startswith(":P"):
             await msg.edit(content=":P ")
@@ -53,11 +53,6 @@ async def on_message(msg):
                     await output[0].send(output[1])
                 else:
                     await output[0].send(output[1], embed=discord.Embed(description=output[2], color=bot.color))
-
-@client.event
-async def on_message_edit(msg, edited_msg):
-    if msg.author == client.user:
-        await cmd.blep.ping(edited_msg)
 
 
 #sets up sql server (set sql_setup to false if this is not needed/wanted)

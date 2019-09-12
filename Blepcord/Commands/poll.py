@@ -19,15 +19,20 @@ output[3]=reactions ([])
 #returns: output=list representing the output for main to use (outlined above)
 def run(msg, args):
     output = [msg.channel, "", "", []]
+    print(args)
     output[1] = "**:bar_chart:" + args[0] + "**"
     args = emote.split_emotes(args[1:])
+    print(args)
     i = 0
-    while i < args[0].length:
+    while i < len(args[0]):
         if args[1][i] is None:
+            print(i)
             emot = next(args[2])
-            output[2].append(emot+": "+args[0][i])
-            output[3][i] = emot
+            print(emot)
+            output[2] += emot+": "+args[0][i]+"\n"
+            output[3].append(emot)
         else:
-            output[2].append(args[1][i]+": "+args[0][i])
-            output[3][i] = args[1][i]
+            output[2] += args[1][i]+": "+args[0][i]+"\n"
+            output[3].append(args[1][i])
+        i+=1
     return output

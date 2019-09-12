@@ -30,7 +30,6 @@ class sql:
             #sql command to create table
             command = """CREATE TABLE "servers" (
             "guild_id" INTEGER,
-            "guild_owner" INTEGER,
             "command" TEXT,
             "admin_role" TEXT,
             PRIMARY KEY("guild_id")
@@ -48,10 +47,10 @@ class sql:
     def add(self, server, server_owner):
         #sql command to add values to table
         command = """INSERT INTO servers
-        VALUES (?, ?, ':', 'None');"""
+        VALUES ("""+server+", ':', 'None');"
 
         #executes command to add values to table
-        self.crsr.execute(command, (server, server_owner))
+        self.crsr.execute(command)
 
         #commits changes to db
         self.conn.commit()
@@ -59,31 +58,23 @@ class sql:
         print("Added server {} to database".format(server))
 
     #changes values in table servers
-    def change(self, server, server_owner=None, prefix=None, admin=None):
+    def change(self, server, prefix=None, admin=None):
         #if statements control what is changed based on whether they have values
-        if server_owner is not None:
-            #sql command to change guild_owner value in table
-            command = """UPDATE servers
-            SET guild_owner=?
-            WHERE guild_id=?;"""
-            #executes command to change guild_owner value in table
-            self.crsr.execute(command, (server_owner, server))
-
         if prefix is not None:
             #sql command to change command value in table
             command = """UPDATE servers
-            SET command='?'
-            WHERE guild_id=?;"""
+            SET admin_role='"""+prefix+"""'
+            WHERE guild_id="""+server+";"
             #executes command to change command value in table
-            self.crsr.execute(command, (prefix, server))
+            self.crsr.execute(command)
 
         if admin is not None:
             #sql command to change guild_owner value in table
             command = """UPDATE servers
-            SET admin_role='?'
-            WHERE guild_id=?;"""
+            SET admin_role='"""+admin+"""'
+            WHERE guild_id="""+server+";"
             #executes command to change guild_owner value in table
-            self.crsr.execute(command, (admin, server))
+            self.crsr.execute(command)
 
         #commits changes to db
         self.conn.commit()
@@ -94,10 +85,10 @@ class sql:
     def delete(self, server):
         #sql command to delete entry in table servers
         command = """DELETE FROM servers
-        WHERE guild_id=?;"""
+        WHERE guild_id="""+server+";"
 
         #executes command to delete entry in table servers
-        self.crsr.execute(command, (server))
+        self.crsr.execute(command)
 
         #commits changes to db
         self.conn.commit()
@@ -107,11 +98,11 @@ class sql:
     #reads from sql server based on server and column given
     def read(self, server, column):
         #sql command to read column for server in table servers
-        command = """SELECT ? FROM servers
-        WHERE guild_id=?;"""
+        command = "SELECT "+column+""" FROM servers
+        WHERE guild_id="""+server+";"
 
         #executes command to read column for server in table servers
-        self.crsr.execute(command, (column, server))
+        self.crsr.execute(command)
 
         #grabbing data from sql command
         data = self.crsr.fetchall()

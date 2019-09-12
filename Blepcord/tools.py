@@ -18,9 +18,12 @@ def parse_command(msg, prefix):
 #returns: string array
 def parse_args(msg):
     args = msg.split('"')
+    print(args)
     del args[-1]
     i = 0
     while i < len(args)-1:
+        print(args)
         del args[i]
         args[i] = args[i].strip()
+        i+=1
     return args
